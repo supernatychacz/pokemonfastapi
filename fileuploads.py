@@ -68,6 +68,3 @@ def uploadCSVFileToPokemonStatsDatabase(file, db):
     # check the result in the database using pgadmin
 
 
-
-
-

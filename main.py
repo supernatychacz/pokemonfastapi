@@ -6,13 +6,13 @@ from database import engine, SessionLocal, Base
 from sqlalchemy.orm import Session, subqueryload
 import helpers
 import fileuploads
-
+from typing import List
 
 app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:5173"
 ]
 
 app.add_middleware(
@@ -70,7 +70,7 @@ def uploadPokemonStats(pokemonStatsCSVFile: UploadFile, db : Session = Depends(g
 
 
 
-@app.get("/pokemon", response_model=list[PokemonResponseModel])
+@app.get("/pokemon", response_model=List[PokemonResponseModel])
 def getAllPokemons(db: Session = Depends(get_db)):
     # avoid n+1 problem with eager loading using subqueryload (will be discussed in the session remind me if I forget please :))
     pokemons  = db.query(models.Pokemon).options(subqueryload(models.Pokemon.stats)).all()
@@ -92,4 +92,3 @@ def getPokemon(pokemon_name : str, db: Session = Depends(get_db)):
     if not pokemon:
         raise HTTPException(404, "Pokemon not found")
     return pokemon
-
